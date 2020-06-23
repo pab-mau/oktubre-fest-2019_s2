@@ -1,0 +1,88 @@
+import marcasYCervezas.*
+import personas.*
+import carpas.*
+
+test "marcas,jarras y personas" {
+    
+    const corona = new CervezaRubia(contenidoLupulo = 20 ,paisDeOrigen = "mexico", graduacion = 10)
+    const hofbrau = new CervezaNegra(contenidoLupulo = 10, paisDeOrigen = "escocia")
+    const guiness = new CervezaRoja(contenidoLupulo = 40 , paisDeOrigen = "alemania")
+     const berretin =new CervezaRubia(contenidoLupulo=2, paisDeOrigen="china", graduacion=7)
+    
+    graduacionReglamentaria.graduacionR(40)
+    
+	assert.equals(20 , hofbrau.graduacion())
+	assert.equals(50 , guiness.graduacion())
+	
+	const jarra = new Jarra(capacidad = 0.5,marca = corona)
+	const jarra2 = new Jarra(capacidad = 1, marca = hofbrau)
+    const jarra3 = new Jarra(capacidad = 2, marca = guiness)
+    const jarra4 = new Jarra(capacidad = 1, marca=berretin)
+   
+    assert.equals(0.05 , jarra.cantidadAlcohol())
+    assert.equals(0.2, jarra2.cantidadAlcohol())
+    assert.equals(1 , jarra3.cantidadAlcohol())
+    assert.equals(0.07, jarra4.cantidadAlcohol())
+   
+    const belga = new PersonaBelga(peso = 80, jarrasCompradas=([jarra,jarra2,jarra3,jarra4]),escuchaMTradicional=true,nivelDeAguante=80)
+    
+    
+    assert.equals(1.32, belga.alcoholTotal())
+    assert.that(belga.estaEbrie())
+    assert.that(belga.leGusta(corona))
+    assert.notThat(belga.leGusta(berretin))
+    
+    const checo = new PersonaCheca(peso = 90 , jarrasCompradas =([jarra,jarra3,jarra4]),escuchaMTradicional=false,nivelDeAguante=110)
+    
+    assert.equals(1.12 , checo.alcoholTotal())
+    assert.notThat(checo.estaEbrie())
+    assert.that(checo.leGusta(hofbrau))
+    assert.notThat(checo.leGusta(berretin))
+    
+}
+
+test "carpas"  {
+	
+	
+	graduacionReglamentaria.graduacionR(40)
+	const corona = new CervezaRubia(contenidoLupulo = 20 ,paisDeOrigen = "mexico", graduacion = 10)
+    const hofbrau = new CervezaNegra(contenidoLupulo = 10, paisDeOrigen = "escocia")
+    const guiness = new CervezaRoja(contenidoLupulo = 40 , paisDeOrigen = "alemania")
+    const berretin =new CervezaRubia(contenidoLupulo=2, paisDeOrigen="china", graduacion=7)
+	const sol =new CervezaRubia(contenidoLupulo=15, paisDeOrigen="alemania", graduacion=12)
+	const jarra = new Jarra(capacidad = 0.5,marca = corona)
+	const jarra2 = new Jarra(capacidad = 1, marca = hofbrau)
+    const jarra3 = new Jarra(capacidad = 2, marca = guiness)
+    const jarra4 = new Jarra(capacidad = 1, marca=berretin)
+	const belga = new PersonaBelga(peso = 80, jarrasCompradas=([jarra,jarra2,jarra3,jarra4]),escuchaMTradicional=true,nivelDeAguante=80)
+	const checo = new PersonaCheca(peso = 90 , jarrasCompradas =([jarra,jarra3,jarra4]),escuchaMTradicional=false,nivelDeAguante=110)
+	const aleman= new PersonaAlemana(peso = 100 , jarrasCompradas =([jarra,jarra2,jarra3,jarra4]),escuchaMTradicional=true,nivelDeAguante=90,marcaQueLeGustan=([corona,hofbrau,guiness]))
+	const carpa = new Carpa(limiteGente=20,tieneMusica=true,vendeCervezaMarca=corona,cantidadPersonas=6)
+	const carpa2 = new Carpa(limiteGente=20,tieneMusica=false,vendeCervezaMarca=berretin,cantidadPersonas=9)
+	const carpa3 = new Carpa(limiteGente=10,tieneMusica=true,vendeCervezaMarca=hofbrau,cantidadPersonas=10)
+    const carpa4 = new Carpa(limiteGente=20,tieneMusica=false,vendeCervezaMarca=sol,cantidadPersonas=15)
+	
+	
+	
+	assert.that(belga.quiereEntrar(carpa))
+	assert.notThat(checo.quiereEntrar(carpa))
+	assert.that(aleman.quiereEntrar(carpa))
+	assert.notThat(aleman.quiereEntrar(carpa2))
+	assert.notThat(carpa.dejaIngresar(belga))
+	assert.that(carpa.dejaIngresar(checo))
+	assert.notThat(carpa.dejaIngresar(aleman))
+	assert.notThat(carpa3.dejaIngresar(checo))
+	assert.notThat(belga.puedeEntrar(carpa))
+	assert.that(checo.puedeEntrar(carpa4))
+	assert.notThat(aleman.puedeEntrar(carpa3))
+	
+	checo.entrar(carpa4)
+	carpa4.servirA(checo)
+	
+	
+	assert.equals(16,carpa4.cantidadPersonas())
+	
+	
+	
+}
+
